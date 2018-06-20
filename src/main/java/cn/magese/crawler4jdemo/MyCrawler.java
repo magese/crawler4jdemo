@@ -4,8 +4,15 @@ import edu.uci.ics.crawler4j.crawler.Page;
 import edu.uci.ics.crawler4j.crawler.WebCrawler;
 import edu.uci.ics.crawler4j.parser.HtmlParseData;
 import edu.uci.ics.crawler4j.url.WebURL;
+import org.apache.commons.io.IOUtils;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.util.Objects;
 import java.util.Set;
+import java.util.UUID;
 import java.util.regex.Pattern;
 
 /**
@@ -15,7 +22,7 @@ public class MyCrawler extends WebCrawler {
     /**
      * 正则匹配指定的后缀文件
      */
-    private final static Pattern FILTERS = Pattern.compile(".*(\\.(css|js|gif|jpg|png|mp3|zip|gz))$");
+    private final static Pattern FILTERS = Pattern.compile(".*(\\.(gif|jpg|png|bmp|jpeg))$");
 
     /**
      * 这个方法主要是决定哪些url我们需要抓取，返回true表示是我们需要的，返回false表示不是我们需要的Url
@@ -24,7 +31,9 @@ public class MyCrawler extends WebCrawler {
      */
     @Override
     public boolean shouldVisit(Page referringPage, WebURL url) {
-        return super.shouldVisit(referringPage, url);
+        String href = url.getURL().toLowerCase();// 得到小写的url
+        return FILTERS.matcher(href).matches() /* 正则匹配，过滤掉我们不需要的后缀文件*/
+                && href.startsWith("http://www.itcast.cn");
     }
 
     /**
@@ -35,19 +44,51 @@ public class MyCrawler extends WebCrawler {
     public void visit(Page page) {
         String url = page.getWebURL().getURL();  // 获取url
         System.out.println("URL: " + url);
+        byte[] contentData = page.getContentData();
 
-        if (page.getParseData() instanceof HtmlParseData) {  // 判断是否是html数据
+        String extName = url.substring(url.lastIndexOf("."));
+        String filename = UUID.randomUUID().toString();
+        File file = new File("E:\\crawl\\pic\\" + filename + extName);
+        System.out.println(file);
+        OutputStream out = null;
+        try {
+            out = new FileOutputStream(file);
+            IOUtils.write(contentData, out);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                Objects.requireNonNull(out).close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+
+        /*if (page.getParseData() instanceof HtmlParseData) {  // 判断是否是html数据
             HtmlParseData htmlParseData = (HtmlParseData) page.getParseData(); // 强制类型转换，获取html数据对象
             String text = htmlParseData.getText();  // 获取页面纯文本（无html标签）
             String html = htmlParseData.getHtml();  // 获取页面Html
             Set<WebURL> links = htmlParseData.getOutgoingUrls();  // 获取页面输出链接
 
-            System.out.println(text);
+            File file = new File("E:\\crawl\\html\\");
+            OutputStream out = null;
+            try {
+                out = new FileOutputStream(file);
+                IOUtils.write(html, out);
+            } catch (IOException e) {
+                e.printStackTrace();
+            } finally {
+                try {
+                    Objects.requireNonNull(out).close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+
             System.out.println("纯文本长度: " + text.length());
-            System.out.println(html);
             System.out.println("html长度: " + html.length());
-            System.out.println(links);
             System.out.println("输出链接个数: " + links.size());
-        }
+        }*/
     }
 }

@@ -25,7 +25,10 @@ public class CrawlerController {
         collections.add(new BasicHeader("Cookie", "__cfduid=d83a0e64068437a969871414939c43ab31529024454; PHPSESSID=ipuv3qa5a41jufbq5bsmnslr42; UM_distinctid=16400f57f75d8-0428d8e0235cd3-5b183a13-1fa400-16400f57f76503; CNZZDATA30058803=cnzz_eid%3D1255225115-1529022468-https%253A%252F%252Fwww.baidu.com%252F%26ntime%3D1529022468; yjs_id=ceb5623f6e2a5b45281cd75395ac1e7f; ctrl_time=1; CNZZDATA30058806=cnzz_eid%3D1621400449-1529019905-https%253A%252F%252Fwww.baidu.com%252F%26ntime%3D1529025322; Hm_lvt_09abe82d1cd5a1c4f81584b7035300ab=1529024446,1529027799; Hm_lpvt_09abe82d1cd5a1c4f81584b7035300ab=1529027805"));
         config.setDefaultHeaders(collections);
         config.setCrawlStorageFolder(crawlStorageFolder); // 设置爬虫文件存储位置
-
+        config.setPolitenessDelay(500); // 设置爬取时间间隔；
+        config.setIncludeBinaryContentInCrawling(true); // 设置可以爬取二进制内容
+        config.setMaxPagesToFetch(-1); // 要抓取的最大页数
+        config.setMaxDepthOfCrawling(-1); // 爬取深度
         /*
          * 实例化爬虫控制器
          */
@@ -40,9 +43,7 @@ public class CrawlerController {
         /*
          * 配置爬虫种子页面，就是规定的从哪里开始爬，可以配置多个种子页面
          */
-        controller.addSeed("https://www.cnxiangyan.com/brand/");
-//        controller.addSeed("http://www.java1234.com/a/kaiyuan/");
-//        controller.addSeed("http://www.java1234.com/a/bysj/");
+        controller.addSeed("http://www.itcast.cn/");
 
         /*
          * 启动爬虫，爬虫从此刻开始执行爬虫任务，根据以上配置
