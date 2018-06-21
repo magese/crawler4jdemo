@@ -2,7 +2,6 @@ package cn.magese.crawler4jdemo;
 
 import edu.uci.ics.crawler4j.crawler.Page;
 import edu.uci.ics.crawler4j.crawler.WebCrawler;
-import edu.uci.ics.crawler4j.parser.HtmlParseData;
 import edu.uci.ics.crawler4j.url.WebURL;
 import org.apache.commons.io.IOUtils;
 
@@ -11,7 +10,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Objects;
-import java.util.Set;
 import java.util.UUID;
 import java.util.regex.Pattern;
 
@@ -22,7 +20,7 @@ public class MyCrawler extends WebCrawler {
     /**
      * 正则匹配指定的后缀文件
      */
-    private final static Pattern FILTERS = Pattern.compile(".*(\\.(gif|jpg|png|bmp|jpeg))$");
+    private final static Pattern FILTERS = Pattern.compile(".*(\\.(css|js|mp3|zip|gz))$");
 
     /**
      * 这个方法主要是决定哪些url我们需要抓取，返回true表示是我们需要的，返回false表示不是我们需要的Url
@@ -32,8 +30,8 @@ public class MyCrawler extends WebCrawler {
     @Override
     public boolean shouldVisit(Page referringPage, WebURL url) {
         String href = url.getURL().toLowerCase();// 得到小写的url
-        return FILTERS.matcher(href).matches() /* 正则匹配，过滤掉我们不需要的后缀文件*/
-                && href.startsWith("http://www.itcast.cn");
+        return !FILTERS.matcher(href).matches() /* 正则匹配，过滤掉我们不需要的后缀文件*/
+                && href.startsWith("http://www.yanyue.cn");
     }
 
     /**
@@ -43,24 +41,30 @@ public class MyCrawler extends WebCrawler {
     @Override
     public void visit(Page page) {
         String url = page.getWebURL().getURL();  // 获取url
+        url = url.toLowerCase();
         System.out.println("URL: " + url);
-        byte[] contentData = page.getContentData();
 
-        String extName = url.substring(url.lastIndexOf("."));
-        String filename = UUID.randomUUID().toString();
-        File file = new File("E:\\crawl\\pic\\" + filename + extName);
-        System.out.println(file);
-        OutputStream out = null;
-        try {
-            out = new FileOutputStream(file);
-            IOUtils.write(contentData, out);
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
+        // 图片
+        if (url.endsWith(".png") || url.endsWith(".jpg") || url.endsWith(".jpeg") || url.endsWith(".bmp")
+                || url.endsWith(".ico") || url.endsWith(".gif")) {
+            byte[] contentData = page.getContentData();
+
+            String extName = url.substring(url.lastIndexOf("."));
+            String filename = UUID.randomUUID().toString();
+            File file = new File("E:\\crawl\\pic\\" + filename + extName);
+            System.out.println(file);
+            OutputStream out = null;
             try {
-                Objects.requireNonNull(out).close();
+                out = new FileOutputStream(file);
+                IOUtils.write(contentData, out);
             } catch (IOException e) {
                 e.printStackTrace();
+            } finally {
+                try {
+                    Objects.requireNonNull(out).close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         }
 

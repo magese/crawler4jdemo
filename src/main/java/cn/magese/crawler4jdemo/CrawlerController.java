@@ -15,7 +15,7 @@ public class CrawlerController {
         int numberOfCrawlers = 7; // 定义7个爬虫，也就是7个线程
 
         CrawlConfig config = new CrawlConfig(); // 定义爬虫配置
-        HashSet<BasicHeader> collections = new HashSet<BasicHeader>();
+        HashSet<BasicHeader> collections = new HashSet<>();
         collections.add(new BasicHeader("User-Agent", "Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.87 Safari/537.36"));
         collections.add(new BasicHeader("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8"));
         collections.add(new BasicHeader("Accept-Encoding", "gzip,deflate"));
@@ -43,7 +43,7 @@ public class CrawlerController {
         /*
          * 配置爬虫种子页面，就是规定的从哪里开始爬，可以配置多个种子页面
          */
-        controller.addSeed("http://www.itcast.cn/");
+        controller.addSeed("http://www.yanyue.cn/");
 
         /*
          * 启动爬虫，爬虫从此刻开始执行爬虫任务，根据以上配置
