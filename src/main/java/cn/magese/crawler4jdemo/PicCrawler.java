@@ -17,7 +17,7 @@ import java.util.regex.Pattern;
 /**
  * 自定义爬虫类
  */
-public class MyCrawler extends WebCrawler {
+public class PicCrawler extends WebCrawler {
     /**
      * 正则匹配指定的后缀文件
      */
@@ -101,7 +101,7 @@ public class MyCrawler extends WebCrawler {
             in = con.getInputStream();
             String extName = url.toString().substring(url.toString().lastIndexOf("."));
             String filename = UUID.randomUUID().toString();
-            File file = new File("E:\\crawl\\pic\\" + filename + extName);
+            File file = new File("E:\\crawl\\dotapic\\" + filename + extName);
             System.out.println(file);
             out = new FileOutputStream(file);
             IOUtils.copy(in, out);
