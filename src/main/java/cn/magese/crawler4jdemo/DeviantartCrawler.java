@@ -17,7 +17,7 @@ import java.util.regex.Pattern;
 /**
  * 自定义爬虫类
  */
-public class PicCrawler extends WebCrawler {
+public class DeviantartCrawler extends WebCrawler {
     /**
      * 正则匹配指定的后缀文件
      */
